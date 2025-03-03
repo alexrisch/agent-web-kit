@@ -1,6 +1,15 @@
 import Image from "next/image";
+import axios from "axios";
+import getConfig from 'next/config';
 
-export default function Home() {
+const { publicRuntimeConfig } = getConfig();
+const baseUrl = publicRuntimeConfig.baseUrl ?? "http://localhost:3000";
+const requestUrl = `${baseUrl}/api/info`;
+console.log('requestUrl', requestUrl);
+
+export default async function Home() {
+  const res = await axios.get(`${baseUrl}/api/info`);
+  console.log('res', res.data);
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
