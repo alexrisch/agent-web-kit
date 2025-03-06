@@ -24,7 +24,6 @@ export class AgentClient {
   base_url: string;
   auth_secret: string | undefined;
   timeout: number | undefined;
-  info: ServiceMetadata | null;
   agent: string | null;
 
   constructor(
@@ -37,7 +36,6 @@ export class AgentClient {
     this.base_url = base_url;
     this.auth_secret = process.env.AUTH_SECRET;
     this.timeout = timeout;
-    this.info = null;
     this.agent = null;
     if (agent) {
       this.updateAgent(agent);
@@ -53,14 +51,6 @@ export class AgentClient {
   }
 
   updateAgent(agent: string, verify: boolean = true) {
-    if (verify) {
-      const agent_keys = this.info?.agents.map(a => a.key) ?? [];
-      if (!agent_keys.includes(agent)) {
-        throw new AgentClientError(
-          `Agent ${agent} not found in available agents: ${agent_keys.join(", ")}`
-        );
-      }
-    }
     this.agent = agent;
   }
 
