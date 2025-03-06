@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
   const response = await axios.post<ChatMessage>(
     url,
     {
-      threadId: threadId,
+      thread_id: threadId,
       message,
       model,
     },
