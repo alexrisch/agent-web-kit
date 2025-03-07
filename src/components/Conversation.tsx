@@ -23,14 +23,15 @@ export const Conversation: FC<ConversationProps> = ({
 
   return (
     <Box w="full" h="full" display="flex" flexDirection="column" p={4}>
-      <ThreadDrawer
-        open={open}
-        onClose={onClose}
-        onOpen={onOpen}
-        onNewThread={() => { }}
-        threads={[]}
-        onSelectModel={() => { }}
-      />
+      <Box>
+        <ThreadDrawer
+          open={open}
+          onClose={onClose}
+          onOpen={onOpen}
+          onNewThread={() => { }}
+          threads={[]}
+        />
+      </Box>
       <VStack flex={1} w="full" spaceX={4} spaceY={4} overflowY="auto" align="start">
         {messages.map((msg, index) => {
           const fromAi = msg.type === "ai";

@@ -5,7 +5,7 @@ import axios from 'axios';
 import React, { useCallback, useState } from 'react';
 import { v4 as uuidv4 } from "uuid";
 import { Conversation } from './Conversation';
-import { Box, Heading, useDisclosure } from '@chakra-ui/react';
+import { Box, Center, Heading, useDisclosure } from '@chakra-ui/react';
 import { ConversationInput } from './ConversationInput';
 import { ThreadDrawer } from './ThreadDrawer';
 import { AGENT_STORAGE_KEY, MODEL_STORAGE_KEY } from '@/constants/storageConstants';
@@ -60,20 +60,27 @@ export function Home() {
 
   return (
     <main>
-      <Box h="100vh">
+      <Box h="100vh" p={4}>
         {!state.messages.length ? (
-          <Box w="full" flex={1} display="flex" flexDirection={"column"} justifyContent="center" alignItems="center">
-            <Box w="full" display="flex" flexDirection={"row"} alignItems={'center'} p={4}>
+          <Box
+            w="full"
+            h="full"
+            flexGrow={1}
+            display="flex"
+            flexDirection={"column"}
+          >
+            <Box>
               <ThreadDrawer
                 open={open}
                 onClose={onClose}
                 onOpen={onOpen}
                 onNewThread={() => { }}
                 threads={[]}
-                onSelectModel={() => { }}
               />
-              <Heading display={"flex"} flex={1} textAlign={'center'}>Welcome to the chat!</Heading>
             </Box>
+            <Center w="full" flex={1} display="flex" flexDirection={'column'} p={4} alignItems={'center'}>
+              <Heading>{APP_CONFIG.homeMessage}</Heading>
+            </Center>
             <ConversationInput input={state.input} setInput={setInput} sendMessage={onSendMessage} loading={state.sendingMessage} />
           </Box>
         ) : (

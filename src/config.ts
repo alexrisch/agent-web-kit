@@ -3,4 +3,5 @@ export const APP_CONFIG = {
   enableAuthentication: true,
   enableAgentSelect: true,
   enableModelSelect: true,
+  homeMessage: "Welcome to the chat!"
 }
