@@ -1,6 +1,9 @@
 This is a minimal Next.js integration on top of https://github.com/JoshuaC215/agent-service-toolkit
 
-This is meant to show as an example of how to integrate with the service backend and serve as a general starting point
+This is meant to show as an example of how to integrate with the service backend and serve as a general starting point when creating AI Agents
+
+## Live Demo
+https://agent-web-kit-production.up.railway.app/
 
 
 ## Getting Started
