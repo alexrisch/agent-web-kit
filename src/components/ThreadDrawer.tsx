@@ -6,14 +6,13 @@ import {
   DrawerContent,
   DrawerRoot,
 } from "@/components/ui/drawer"
-import { Box, Button, Heading, HStack, Separator, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Heading, HStack, Text, VStack } from "@chakra-ui/react";
 import { FaBars } from "react-icons/fa";
 import { useCallback, useEffect, useState } from "react";
 import { FaPenSquare } from "react-icons/fa";
 import axios from "axios";
 import {
   RadioCardItem,
-  RadioCardLabel,
   RadioCardRoot,
 } from "@/components/ui/radio-card"
 import { AGENT_STORAGE_KEY, MODEL_STORAGE_KEY } from "@/constants/storageConstants";
@@ -28,7 +27,7 @@ type ThreadDrawerprops = {
   threads: { id: string; title: string }[];
   onNewThread: () => void;
   open: boolean;
-  onOpen: (payload: any) => void;
+  onOpen: () => void;
   onClose: () => void;
 };
 

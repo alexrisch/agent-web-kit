@@ -13,7 +13,7 @@ const timeout = process.env.TIMEOUT ? parseInt(process.env.TIMEOUT) : 10000;
 export async function POST(request: NextRequest) {
   console.log('INVOKE REQEUST', request);
   const feedback: Feedback = await request.json();
-  const response = await axios.post<{}, Feedback>(
+  const response = await axios.post<object, Feedback>(
     `${AGENT_URL}/feedback`,
     feedback,
     { headers: {}, timeout }

@@ -62,7 +62,7 @@ export type UserInput = {
    * Additional configuration to pass through to the agent.
    * example: { spicy_level: 0.8 }
    */
-  agent_config?: Record<string, any>;
+  agent_config?: Record<string, unknown>;
 };
 
 /**
@@ -86,7 +86,7 @@ export type ToolCall = {
   /**
    * The arguments to the tool call.
    */
-  args: Record<string, any>;
+  args: Record<string, unknown>;
   /**
    * An identifier associated with the tool call.
    */
@@ -128,11 +128,11 @@ export type ChatMessage = {
   /**
    * Response metadata. For example: response headers, logprobs, token counts.
    */
-  response_metadata?: Record<string, any>;
+  response_metadata?: Record<string, unknown>;
   /**
    * Custom message data.
    */
-  custom_data?: Record<string, any>;
+  custom_data?: Record<string, unknown>;
 };
 
 /**
@@ -158,7 +158,7 @@ export type Feedback = {
    * Additional feedback kwargs, passed to LangSmith.
    * example: { comment: "In-line human feedback" }
    */
-  kwargs?: Record<string, any>;
+  kwargs?: Record<string, unknown>;
 };
 
 /**

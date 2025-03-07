@@ -31,7 +31,7 @@ export const Thread: FC<ThreadProps> = ({
       });
     }
     req();
-  }, []);
+  }, [id]);
 
   const onSendMessage = useCallback(async () => {
     const humanMessage: ChatMessage = {
