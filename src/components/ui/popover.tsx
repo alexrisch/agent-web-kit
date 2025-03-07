@@ -13,7 +13,10 @@ export const PopoverContent = React.forwardRef<
 >(function PopoverContent(props, ref) {
   const { portalled = true, portalRef, ...rest } = props
   return (
-    <Portal disabled={!portalled} container={portalRef}>
+    <Portal
+      container={portalRef}
+      disabled={!portalled}
+    >
       <ChakraPopover.Positioner>
         <ChakraPopover.Content ref={ref} {...rest} />
       </ChakraPopover.Positioner>
@@ -38,9 +41,9 @@ export const PopoverCloseTrigger = React.forwardRef<
 >(function PopoverCloseTrigger(props, ref) {
   return (
     <ChakraPopover.CloseTrigger
+      insetEnd="1"
       position="absolute"
       top="1"
-      insetEnd="1"
       {...props}
       asChild
       ref={ref}
