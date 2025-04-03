@@ -42,7 +42,7 @@ export const Thread: FC<ThreadProps> = ({
       ...prev,
       messages: [...prev.messages, humanMessage],
     }));
-    const sendRes = await axios.post<ChatMessage>(`/api/invoke`, {
+    const sendRes = await axios.post<ChatMessage, { data: ChatMessage }>(`/api/invoke`, {
       threadId: id,
       message: input,
     });
