@@ -2,14 +2,15 @@
 
 import { ChatMessage } from '@/app/utils/schemaTypes';
 import axios from 'axios';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from "uuid";
-import { Conversation } from './Conversation';
-import { Box, Center, Heading, useDisclosure } from '@chakra-ui/react';
-import { ConversationInput } from './ConversationInput';
-import { ThreadDrawer } from './ThreadDrawer';
-import { AGENT_STORAGE_KEY, MODEL_STORAGE_KEY } from '@/constants/storageConstants';
+import { Conversation } from '../Conversation';
+import { Box, useDisclosure } from '@chakra-ui/react';
+import { ConversationInput } from '../ConversationInput';
+import { ThreadDrawer } from '../thread-drawer/thread-drawer';
 import { APP_CONFIG } from '@/config';
+import { getSavedAgent, getSavedModel, saveThread } from '@/app/utils/storage-utils';
+import { HomeWelcomeMessage } from './home-welcome-message';
 
 export function Home() {
   const [threadId] = useState<string>(uuidv4());
@@ -17,11 +18,15 @@ export function Home() {
     sendingMessage: boolean;
     messages: ChatMessage[];
     input: string;
+    animationMessageIndex: number | null;
   }>({
     sendingMessage: false,
     messages: [],
     input: "",
+    animationMessageIndex: null,
   });
+
+  const hasSavedThread = useRef<boolean>(false);
 
   const onSendMessage = useCallback(async () => {
     const humanMessage: ChatMessage = {
@@ -33,10 +38,11 @@ export function Home() {
       ...prev,
       messages: [...prev.messages, humanMessage],
       input: "",
+      animationMessageIndex: prev.messages.length,
     }));
 
-    const agent = APP_CONFIG.enableAgentSelect ? localStorage.getItem(AGENT_STORAGE_KEY) ?? undefined : undefined;
-    const model = APP_CONFIG.enableModelSelect ? localStorage.getItem(MODEL_STORAGE_KEY) ?? undefined : undefined;
+    const agent = APP_CONFIG.enableAgentSelect ? getSavedAgent() ?? undefined : undefined;
+    const model = APP_CONFIG.enableModelSelect ? getSavedModel() ?? undefined : undefined;
 
     const sendRes = await axios.post<ChatMessage>(`/api/invoke`, {
       threadId: threadId,
@@ -49,12 +55,23 @@ export function Home() {
     setState((prev) => ({
       ...prev,
       messages: [...prev.messages, newMessage],
+      animationMessageIndex: prev.messages.length,
     }));
   }, [state.input, threadId]);
 
   const setInput = useCallback((input: string) => {
     setState((prev) => ({ ...prev, input }));
   }, []);
+
+  useEffect(() => {
+    if (state.messages.length > 0 && !hasSavedThread.current) {
+      hasSavedThread.current = true;
+      saveThread({
+        id: threadId,
+        title: `New Thread - ${new Date().toLocaleString()}`,
+      });
+    }
+  }, [state.messages.length, threadId]);
 
   const { open, onOpen, onClose } = useDisclosure();
 
@@ -69,18 +86,12 @@ export function Home() {
             display="flex"
             flexDirection={"column"}
           >
-            <Box>
-              <ThreadDrawer
-                open={open}
-                onClose={onClose}
-                onOpen={onOpen}
-                onNewThread={() => { }}
-                threads={[]}
-              />
-            </Box>
-            <Center w="full" flex={1} display="flex" flexDirection={'column'} p={4} alignItems={'center'}>
-              <Heading>{APP_CONFIG.homeMessage}</Heading>
-            </Center>
+            <ThreadDrawer
+              open={open}
+              onClose={onClose}
+              onOpen={onOpen}
+            />
+            <HomeWelcomeMessage />
             <ConversationInput input={state.input} setInput={setInput} sendMessage={onSendMessage} loading={state.sendingMessage} />
           </Box>
         ) : (
@@ -90,10 +101,10 @@ export function Home() {
             onSendMessage={onSendMessage}
             input={state.input}
             setInput={setInput}
+            animationMessageIndex={state.animationMessageIndex}
           />
         )}
       </Box>
-
     </main>
   );
 }

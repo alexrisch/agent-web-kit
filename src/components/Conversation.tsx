@@ -2,7 +2,7 @@ import { ChatMessage } from "@/app/utils/schemaTypes";
 import { Box, VStack, HStack, Text, Spinner, useDisclosure } from "@chakra-ui/react";
 import { FC } from "react";
 import { ConversationInput } from "./ConversationInput";
-import { ThreadDrawer } from "./ThreadDrawer";
+import { ThreadDrawer } from "./thread-drawer/thread-drawer";
 
 type ConversationProps = {
   messages: ChatMessage[];
@@ -10,6 +10,7 @@ type ConversationProps = {
   onSendMessage: () => void;
   input: string;
   setInput: (input: string) => void;
+  animationMessageIndex: number | null;
 };
 
 export const Conversation: FC<ConversationProps> = ({
@@ -18,21 +19,36 @@ export const Conversation: FC<ConversationProps> = ({
   onSendMessage,
   input,
   setInput,
+  animationMessageIndex,
 }) => {
   const { open, onOpen, onClose } = useDisclosure();
 
   return (
     <Box w="full" h="full" display="flex" flexDirection="column" p={4}>
-      <Box>
+      <Box
+        data-state="open"
+        _open={{
+          animation: "slide-from-left-full 0.5s ease-out",
+        }}
+      >
         <ThreadDrawer
           open={open}
           onClose={onClose}
           onOpen={onOpen}
-          onNewThread={() => { }}
-          threads={[]}
         />
       </Box>
-      <VStack flex={1} w="full" spaceX={4} spaceY={4} overflowY="auto" align="start">
+      <VStack
+        flex={1}
+        w="full"
+        spaceX={4}
+        spaceY={4}
+        overflowY="auto"
+        align="start"
+        data-state="open"
+        _open={{
+          animation: "fade-in 0.5s ease-out",
+        }}
+      >
         {messages.map((msg, index) => {
           const fromAi = msg.type === "ai";
           return (
@@ -45,6 +61,10 @@ export const Conversation: FC<ConversationProps> = ({
               py={2}
               borderRadius={"md"}
               maxW="80%"
+              data-state={index === animationMessageIndex ? "open" : "closed"}
+              _open={{
+                animation: "slide-from-bottom-full 0.5s ease-out",
+              }}
             >
               {/* {msg.type === "ai" && <Avatar size="xs" name="AI" />} */}
               <Text>{msg.content}</Text>

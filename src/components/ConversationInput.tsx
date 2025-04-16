@@ -1,5 +1,5 @@
 "use-client";
-import { HStack, Input, Button } from "@chakra-ui/react";
+import { HStack, Button, Textarea } from "@chakra-ui/react";
 import { FC } from "react";
 import { FaPaperPlane } from "react-icons/fa";
 
@@ -17,13 +17,25 @@ export const ConversationInput: FC<ConversationInputProps> = ({
   loading,
 }) => {
   return (
-    <HStack w="full" pt={4} px={4}>
-      <Input
+    <HStack w="full" pt={4} px={4}
+      data-state="open"
+      _open={{
+        animation: "slide-from-bottom-full 0.5s ease-out",
+      }}
+    >
+      <Textarea
         flex={1}
         placeholder="Type your message..."
         value={input}
+        aria-multiline
         onChange={(e) => setInput(e.target.value)}
-        onKeyUp={(e) => e.key === "Enter" && sendMessage()}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+          }
+        }}
+        padding={2}
       />
       <Button colorScheme="blue" onClick={sendMessage} disabled={loading}>
         <FaPaperPlane />

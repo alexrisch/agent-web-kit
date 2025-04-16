@@ -4,6 +4,7 @@ import { ChatMessage } from "@/app/utils/schemaTypes";
 import axios from "axios";
 import { FC, useCallback, useEffect, useState } from "react";
 import { Conversation } from "./Conversation";
+import { Box } from "@chakra-ui/react";
 
 type ThreadProps = {
   id: string;
@@ -15,9 +16,11 @@ export const Thread: FC<ThreadProps> = ({
   const [state, setState] = useState<{
     loading: boolean;
     messages: ChatMessage[];
+    animationMessageIndex: number | null;
   }>({
     loading: true,
     messages: [],
+    animationMessageIndex: null,
   });
 
   const [input, setInput] = useState<string>('');
@@ -28,6 +31,7 @@ export const Thread: FC<ThreadProps> = ({
       setState({
         loading: false,
         messages: data.messages,
+        animationMessageIndex: null,
       });
     }
     req();
@@ -41,6 +45,7 @@ export const Thread: FC<ThreadProps> = ({
     setState((prev) => ({
       ...prev,
       messages: [...prev.messages, humanMessage],
+      animationMessageIndex: prev.messages.length,
     }));
     const sendRes = await axios.post<ChatMessage, { data: ChatMessage }>(`/api/invoke`, {
       threadId: id,
@@ -51,17 +56,21 @@ export const Thread: FC<ThreadProps> = ({
     setState((prev) => ({
       ...prev,
       messages: [...prev.messages, newMessage],
+      animationMessageIndex: prev.messages.length,
     }));
     setInput('');
   }, [input, setInput, id]);
 
   return (
-    <Conversation
-      messages={state.messages}
-      loading={state.loading}
-      onSendMessage={onSendMessage}
-      input={input}
-      setInput={setInput}
-    />
+    <Box h="100vh" p={4}>
+      <Conversation
+        messages={state.messages}
+        loading={state.loading}
+        onSendMessage={onSendMessage}
+        input={input}
+        setInput={setInput}
+        animationMessageIndex={state.animationMessageIndex}
+      />
+    </Box>
   );
 };
